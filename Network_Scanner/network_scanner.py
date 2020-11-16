@@ -10,6 +10,18 @@ def menu():
     print("|            NETWORK SCANNER             |")
     print("------------------------------------------")
 
+def get_args():
+    parser = optparse.OptionParser()
+    parser.add_option("-t", "--target", dest="target", help="target IP(s)")
+    options = parser.parse_args()[0]
+    target = options.target
+    
+    if not options.target:
+        print("[-] No target IP(s) specified.\n    Enter target IP below.\n    Use --help for more info.")
+        target = input("target > ")
+
+    print("------------------------------------------")
+    return target
 
 def scan(ip):
     arp_request = ARP(pdst=ip)
@@ -33,6 +45,7 @@ def display(client_list):
 
 if __name__ == "__main__":
     menu()
-    results = scan("10.0.2.2/24")
+    target = get_args()
+    results = scan(target)
     display(results)
 
