@@ -2,15 +2,21 @@ import optparse
 from scapy.all import srp
 from scapy.layers.l2 import ARP, Ether
 
-# iface = "wlx9cefd5fd63ca"
-
-
 def menu():
+    '''
+        Generic console output header for network scanner
+    '''
     print("------------------------------------------")
     print("|            NETWORK SCANNER             |")
     print("------------------------------------------")
 
 def get_args():
+    '''
+        Gets arguments for program execution
+
+        Returns:
+            target IP or IP range
+    '''
     parser = optparse.OptionParser()
     parser.add_option("-t", "--target", dest="target", help="target IP(s)")
     options = parser.parse_args()[0]
@@ -24,6 +30,15 @@ def get_args():
     return target
 
 def scan(ip):
+    '''
+        Performs ARP scan on target IP or IP range
+
+        Parameters:
+            ip - target IP or IP range
+
+        Returns:
+            client_list - list of dict containing mapping between IP and MAC
+    '''
     arp_request = ARP(pdst=ip)
     broadcast = Ether(dst="ff:ff:ff:ff:ff:ff")
     arp_request_broadcast = broadcast / arp_request
@@ -38,6 +53,9 @@ def scan(ip):
     return client_list
 
 def display(client_list):
+    '''
+        Display results in formatted table
+    '''
     print("IP\t\t\tMAC ADDR")
     print("------------------------------------------")
     for client in client_list:
