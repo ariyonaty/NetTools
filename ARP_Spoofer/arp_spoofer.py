@@ -2,6 +2,13 @@ import time
 from scapy.all import srp, send
 from scapy.layers.l2 import ARP, Ether
 
+def menu():
+    '''
+        Generic console output header for arp spoofer
+    '''
+    print("------------------------------------------")
+    print("|              ARP SPOOFER               |")
+    print("------------------------------------------")
 
 def get_mac(ip):
     '''
@@ -51,6 +58,7 @@ if __name__ == "__main__":
     target_ip = '10.0.2.4'
     gateway_ip = '10.0.2.1'
 
+    menu()
     while True:
         try:
             spoof(target_ip, gateway_ip)

@@ -4,13 +4,13 @@ By default, the kernel drops the packets instead of forwarding them to router.
 
 To enable packet forwarding, run:
 ```bash
-systemctl -w net.ipv4.ip_forward=1
+sysctl -w net.ipv4.ip_forward=1
 ```
 To disable packet forwarding, run:
 ```bash
-systemctl -w net.ipv4.ip_forward=1
+sysctl -w net.ipv4.ip_forward=1
 ```
 To check status, run:
 ```bash
-systemctl net.ipv4.ip_forward
+systl net.ipv4.ip_forward
 ```
