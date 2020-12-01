@@ -1,7 +1,9 @@
 # NetTools
 
 ### Testing
-- Performed on Parrot OS
+- Attacker environment is VM running ParrotOS
+- Target environement is VM running Ubunut Server (IoT)
+    - Networks attacks should (theoretically) work on Windows Server as well
 - Conducted with virutal environment
 
 ### Prerequisites
