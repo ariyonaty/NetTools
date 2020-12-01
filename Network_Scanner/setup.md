@@ -12,5 +12,5 @@ sysctl -w net.ipv4.ip_forward=1
 ```
 To check status, run:
 ```bash
-systl net.ipv4.ip_forward
+sysctl net.ipv4.ip_forward
 ```
