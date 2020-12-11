@@ -2,7 +2,7 @@
 
 ### Testing
 - Attacker environment is VM running ParrotOS
-- Target environement is VM running Ubunut Server (IoT)
+- Target environement is VM running Ubuntu Server (IoT)
     - Networks attacks should (theoretically) work on Windows Server as well
 - Conducted with virutal environment
 
