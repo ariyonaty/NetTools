@@ -8,10 +8,22 @@
 #include <curl/curl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-int main(void)
+size_t got_data(char *buffer, size_t itemsize, size_t niterms, void *ign);
+
+int main(int argc, char const *argv[])
 {
     CURL *curl = curl_easy_init();
+
+
+    if (argc != 2)
+    {
+        fprintf(stderr, "Usage: ./downloadex <URL>\n");
+        return EXIT_FAILURE;
+    }
+
+    const char *url = argv[1];
 
     if (!curl)
     {
@@ -20,7 +32,8 @@ int main(void)
     }
 
     // Set options
-    curl_easy_setopt(curl, CURLOPT_URL, "https://google.com");
+    curl_easy_setopt(curl, CURLOPT_URL, url);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, got_data);
 
     // Perform action
     CURLcode result = curl_easy_perform(curl);
@@ -32,4 +45,26 @@ int main(void)
 
     curl_easy_cleanup(curl);
     return EXIT_SUCCESS;
+}
+
+size_t got_data(char *buffer, size_t itemsize, size_t niterms, void *ign)
+{
+    size_t bytes = itemsize * niterms;
+    int linenumber = 1;
+
+    printf("New chuck size: (%zu bytes)\n", bytes);
+    printf("%d:\t", linenumber);
+    for (int i = 0; i < bytes; i++)
+    {
+        printf("%c", buffer[i]);
+
+        if (buffer[i] == '\n')
+        {
+            linenumber++;
+            printf("%d:\t", linenumber);
+        }
+    }
+
+    printf("\n\n");
+    return bytes;
 }
