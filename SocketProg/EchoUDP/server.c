@@ -69,8 +69,9 @@ int main(int argc, char const *argv[])
     for (;;)
     {
         peer_addr_len = sizeof(struct sockaddr_storage);
-        memset(buf, 0, sizeof(BUF_SIZE));
-        nread = recvfrom(sfd, buf, BUF_SIZE, 0, (struct sockaddr *)&peer_addr, &peer_addr_len);
+        // memset(buf, 0, sizeof(BUF_SIZE));
+        nread = recvfrom(sfd, buf, BUF_SIZE - 1, 0, (struct sockaddr *)&peer_addr, &peer_addr_len);
+        buf[nread] = '\0'; /* terminate string */
 
         if (nread == -1) /* Ignore failed request */
             continue;
