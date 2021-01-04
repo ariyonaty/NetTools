@@ -69,6 +69,7 @@ int main(int argc, char const *argv[])
     for (;;)
     {
         peer_addr_len = sizeof(struct sockaddr_storage);
+        memset(buf, 0, sizeof(BUF_SIZE));
         nread = recvfrom(sfd, buf, BUF_SIZE, 0, (struct sockaddr *)&peer_addr, &peer_addr_len);
 
         if (nread == -1) /* Ignore failed request */
@@ -79,7 +80,10 @@ int main(int argc, char const *argv[])
         s = getnameinfo((struct sockaddr *)&peer_addr, peer_addr_len, host, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICSERV);
 
         if (s == 0)
+        {
             printf("Recieved %zd bytes from %s:%s\n", nread, host, service);
+            printf("\t> %s", buf); /* Seems to cause issue with strings with spaces */
+        }
         else
             fprintf(stderr, "getnameinfo: %s\n", gai_strerror(s));
 
