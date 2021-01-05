@@ -36,7 +36,7 @@ int main(int argc, char const *argv[])
     s = getaddrinfo(NULL, argv[1], &hints, &result);
     if (s != 0)
     {
-        fprintf(stderr, "getaddringo: %s\n", gai_strerror(s));
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(s));
         exit(EXIT_FAILURE);
     }
 
