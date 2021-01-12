@@ -8,6 +8,7 @@ import sys as _sys
 
 from struct import Struct as _Struct
 from ipaddress import IPv4Address as _IPv4Address
+from netaddr import * 
 
 # assigning variables to direct function refs
 _fast_time = _time.time
@@ -38,29 +39,31 @@ class RawPacket(object):
     def __str__(self):
         return '\n'.join([
             f'{"="*32}',
-            f'{" "*8}PACKET',
+            f'{" "*12}PACKET',
             f'{"="*32}',
-            f'{" "*8}ETHERNET',
+            f'{" "*12}ETHERNET',
             f'{"-"*32}',
-            f'src mac: {self.src_mac}',
-            f'dst mac: {self.dst_mac}',
+            f'src mac: {EUI(self.src_mac)}',
+            f'dst mac: {EUI(self.dst_mac)}',
             f'{"-"*32}',
-            f'{" "*8}IP',
+            f'{" "*12}IP',
             f'{"-"*32}',
             f'header length: {self.header_len}',
             f'protocol: {self.protocol}',
             f'src ip: {self.src_ip}',
             f'dst ip: {self.dst_ip}',
             f'{"-"*32}',
-            f'{" "*8}PROTOCOL',
+            f'{" "*12}PROTOCOL',
             f'{"-"*32}',
             f'src port: {self.src_port}',
             f'dst port: {self.dst_port}',
             f'{"-"*32}',
-            f'{" "*8}PAYLOAD',
+            f'{" "*12}PAYLOAD',
             f'{"-"*32}',
             f'{self.payload}'
         ])
+
+
 
     def parse(self):
         '''

@@ -28,6 +28,8 @@ def listen_forever(iface):
             data = sock.recv(2048)
         except OSError:
             pass
+        except KeyboardInterrupt:
+            break
         else:
             parse(data)
 
