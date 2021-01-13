@@ -14,7 +14,6 @@
 
 int main(int argc, char const *argv[])
 {
-    int error_code = 0;
     ssize_t data_size;
     uint8_t packet_buffer[PACKET_BUFFER_SIZE];
 
@@ -45,6 +44,7 @@ int main(int argc, char const *argv[])
         if (data_size == -1)
         {
             perror("recvfrom");
+            close(raw_sock);
             return EXIT_FAILURE;
         }
         // packet recvd at this point
