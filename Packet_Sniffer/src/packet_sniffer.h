@@ -2,7 +2,7 @@
 #define __PACKET_SNIFFER_H__
 
 #include <stdint.h>
-
+#include <sys/types.h>
 
 #define MAX_IP_LEN 16
 #define PACKET_BUFFER_SIZE 65536
