@@ -10,10 +10,15 @@ def main():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.bind(SOURCE_ADDR)
 
-    s.sendto(b'exit', SERVER_ADDR)
-    message, addr = s.recvfrom(1024)
-    print(f"From: {addr}\n{message.decode()}")
-
+    cmd = input('> ')
+    while cmd != 'exit':
+        s.sendto(cmd.encode(), SERVER_ADDR)
+        message, addr = s.recvfrom(1024)
+        print(f"{message.decode()}")
+        cmd = input('> ')
+    else:
+        s.sendto(cmd.encode(), SERVER_ADDR)
+        
     s.close()
 
 
