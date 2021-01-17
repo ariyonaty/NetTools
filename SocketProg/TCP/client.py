@@ -12,12 +12,10 @@ def main():
 
     while True:
         send = input("> ")
-        if send == 'exit':
-            s.sendall(send.encode())
-            break
+        print(send)
         s.sendall(send.encode())
         data = s.recv(1024)
-        print(f"Recieved: {data}")
+        print(f"{data.decode()}")
 
     s.shutdown(socket.SHUT_RDWR)
     s.close()

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import socket
+import subprocess
 
 SERVER_ADDR = ('127.0.0.1', 1234)
 
@@ -19,12 +20,14 @@ def main():
         data = conn.recv(1024)
         print(f"Recieved: {data}")
 
-        conn.sendall(data)
+        output = subprocess.run(data, shell=True, capture_output=True).stdout
+
+        conn.sendall(output)
 
         conn.shutdown(socket.SHUT_RDWR)
         conn.close()
 
-        if data == b'exit':
+        if data == b'exit' or not data:
             break
 
     s.shutdown(socket.SHUT_RDWR)
