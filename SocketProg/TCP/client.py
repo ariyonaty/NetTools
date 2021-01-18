@@ -1,25 +1,22 @@
 #!/usr/bin/env python3
 
 import socket
+import subprocess
 
-SERVER_ADDR = ('127.0.0.1', 1234)
 
+HOST = '127.0.0.1'
+PORT = 4567
 
 def main():
-    s = socket.socket()
-
-    s.connect(SERVER_ADDR)
-
-    while True:
-        send = input("> ")
-        print(send)
-        s.sendall(send.encode())
-        data = s.recv(1024)
-        print(f"{data.decode()}")
-
-    s.shutdown(socket.SHUT_RDWR)
-    s.close()
-
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((HOST, PORT))
+        while True:
+            send = input("> ")
+            if not send or send == 'exit':
+                break
+            s.sendall(send.encode())
+            data = s.recv(1024)
+            print(data.decode())
 
 if __name__ == "__main__":
     main()
