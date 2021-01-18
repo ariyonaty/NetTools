@@ -3,35 +3,25 @@
 import socket
 import subprocess
 
-SERVER_ADDR = ('127.0.0.1', 1234)
+HOST = '127.0.0.1'
+PORT = 4567
 
 
 def main():
-    s = socket.socket()
-
-    s.bind(SERVER_ADDR)
-    s.listen(5)
-
-    while True:
-
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((HOST, PORT))
+        s.listen(3)
         conn, addr = s.accept()
-        print(f"Got connection from: {addr}")
-
-        data = conn.recv(1024)
-        print(f"Recieved: {data}")
-
-        output = subprocess.run(data, shell=True, capture_output=True).stdout
-
-        conn.sendall(output)
-
-        conn.shutdown(socket.SHUT_RDWR)
-        conn.close()
-
-        if data == b'exit' or not data:
-            break
-
-    s.shutdown(socket.SHUT_RDWR)
-    s.close()
+        with conn:
+            print(f"Got connection from: {addr}")
+            while True:
+                data = conn.recv(1024)
+                print(f"Recieved: {data}")
+                if not data or data == b'exit':
+                    break
+                output = subprocess.run(
+                    data, shell=True, capture_output=True).stdout
+                conn.sendall(output)
 
 
 if __name__ == "__main__":
