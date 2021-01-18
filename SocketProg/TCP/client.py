@@ -12,10 +12,15 @@ def main():
         s.connect((HOST, PORT))
         while True:
             send = input("> ")
-            if not send or send == 'exit':
+            if not send:
+                continue
+            if send == 'exit':
+                s.sendall(b'exit')
                 break
             s.sendall(send.encode())
             data = s.recv(1024)
+            if not data:
+                continue
             print(data.decode())
 
 if __name__ == "__main__":
