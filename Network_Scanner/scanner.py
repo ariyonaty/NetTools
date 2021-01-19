@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import sys
 import socket
 from scapy.all import sr, srp
 from scapy.layers.l2 import ARP, Ether
@@ -9,9 +10,10 @@ from collections import namedtuple
 Answer = namedtuple('Answer', 'ip mac')
 TCPPort = namedtuple('TCPPort', 'port')
 
+
 def tcp_scan(ip, port):
     try:
-        syn = IP(dst=ip) / TCP(dport=port, flags='S')
+        syn = IP(dst=ip) / TCP(dport=port, flags='')
     except socket.gaierror:
         raise Exception(f'Could not resolve {ip}')
 
@@ -25,6 +27,7 @@ def tcp_scan(ip, port):
 
     return results
 
+
 def arp_scan(ip):
     request = Ether(dst='ff:ff:ff:ff:ff:ff') / ARP(pdst=ip)
     answer, _ = srp(request, timeout=0.5, retry=1)
@@ -35,6 +38,7 @@ def arp_scan(ip):
 
     return results
 
+
 def main():
     # answers = arp_scan('192.168.217.1/24')
     # if not answers:
@@ -43,9 +47,14 @@ def main():
     # for answer in answers:
     #     print(f'Host {answer.ip} ({answer.mac}) is up.')
 
-    ports_to_scan = [22,23,80,443,445]
+    if len(sys.argv) != 2:
+        print(f'Usage: ./{sys.argv[0]} <TARGET IP>')
+        return 
+
+    ip = sys.argv[1]
+    ports_to_scan = [21, 22, 23, 80, 443, 445]
     for port in ports_to_scan:
-        results = tcp_scan('192.168.217.2', port)
+        results = tcp_scan(ip, port)
         if results:
             for result in results:
                 print(f'Port {result.port} is open.')
