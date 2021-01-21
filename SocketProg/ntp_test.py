@@ -7,7 +7,7 @@ import time
 from contextlib import closing
 
 def getNTPTime():
-    host = '192.168.217.128'
+    host = 'us.pool.ntp.org'
     port = 123
     buf = 1024
     msgstr = '\x1b' + 47 * '\0'
