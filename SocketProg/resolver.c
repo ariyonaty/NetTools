@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <netdb.h>
-#include <errno.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 
 #define BUF_SIZE 1024
 
@@ -16,12 +15,10 @@ const char *hostname_to_ip(const char *hostname);
 int main(int argc, char const *argv[])
 {
     struct addrinfo hints;
-    struct addrinfo *results, *rp;
+    struct addrinfo *res, *p;
 
-    int sfd, s;
-    size_t len;
-    ssize_t nread;
-    char buf[BUF_SIZE];
+    int status;
+    char ipstr[INET6_ADDRSTRLEN];
 
     if (argc != 2)
     {
@@ -29,10 +26,41 @@ int main(int argc, char const *argv[])
         exit(EXIT_FAILURE);
     }
 
-    const char *hostname = argv[1];
-    const char *ip = hostname_to_ip(argv[1]);
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
 
-    printf("%s resolved to %s\n", hostname, ip);
+    if ((status = getaddrinfo(argv[1], NULL, &hints, &res)) != 0)
+    {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(status));
+        exit(EXIT_FAILURE);
+    }
+
+    printf("IP addresses for %s:\n\n", argv[1]);
+
+    for (p = res; p != NULL; p = p->ai_next)
+    { 
+        void *addr;
+        char *ipver;
+
+        if (p->ai_family == AF_INET)
+        {
+            struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+            addr = &(ipv4->sin_addr);
+            ipver = "IPv4";
+        }
+        else
+        {
+            struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)p->ai_addr;
+            addr = &(ipv6->sin6_addr);
+            ipver = "IPv6";
+        }
+
+        inet_ntop(p->ai_family, addr, ipstr, sizeof(ipstr));
+        printf("  %s: %s\n", ipver, ipstr);
+    }
+
+    freeaddrinfo(res);
 
     return 0;
 }
@@ -64,7 +92,6 @@ const char *hostname_to_ip(const char *hostname)
     for (p = servinfo; p != NULL; p = p->ai_next)
     {
         host = (struct sockaddr_in *)p->ai_addr;
-        strcpy(ip, inet_ntoa(host->sin_addr));
     }
 
     printf("Here\n");
