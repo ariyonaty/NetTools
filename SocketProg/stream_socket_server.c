@@ -18,26 +18,10 @@
 #define PORT "4444"
 #define BACKLOG 5
 
-void sigchld_handler(int s)
-{
-    // waitpid() may overwrite errno ; create local temp
-    int tmp_errno = errno;
+void sigchld_handler(int s);
+void *get_in_addr(struct sockaddr *sa);
 
-    while (waitpid(-1, NULL, WNOHANG) > 0)
-        ;
 
-    errno = tmp_errno;
-}
-
-void *get_in_addr(struct sockaddr *sa)
-{
-    if (sa->sa_family == AF_INET)
-    {
-        return &(((struct sockaddr_in *)sa)->sin_addr);
-    }
-
-    return &(((struct sockaddr_in6 *)sa)->sin6_addr);
-}
 
 int main(void)
 {
@@ -137,4 +121,26 @@ int main(void)
         close(new_fd);
     }
     return 0;
+}
+
+void sigchld_handler(int s)
+{
+    // waitpid() may overwrite errno ; create local temp
+    int tmp_errno = errno;
+
+    while (waitpid(-1, NULL, WNOHANG) > 0)
+        ;
+
+    errno = tmp_errno;
+}
+
+
+void *get_in_addr(struct sockaddr *sa)
+{
+    if (sa->sa_family == AF_INET)
+    {
+        return &(((struct sockaddr_in *)sa)->sin_addr);
+    }
+
+    return &(((struct sockaddr_in6 *)sa)->sin6_addr);
 }

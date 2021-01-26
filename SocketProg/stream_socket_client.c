@@ -16,15 +16,7 @@
 #define PORT "4444"
 #define MAX_DATA_SIZE 128
 
-void *get_in_addr(struct sockaddr *sa)
-{
-    if (sa->sa_family == AF_INET)
-    {
-        return &(((struct sockaddr_in *)sa)->sin_addr);
-    }
-
-    return &(((struct sockaddr_in6 *)sa)->sin6_addr);
-}
+void *get_in_addr(struct sockaddr *sa);
 
 int main(int argc, char const *argv[])
 {
@@ -91,4 +83,14 @@ int main(int argc, char const *argv[])
     close(sockfd);
 
     return 0;
+}
+
+void *get_in_addr(struct sockaddr *sa)
+{
+    if (sa->sa_family == AF_INET)
+    {
+        return &(((struct sockaddr_in *)sa)->sin_addr);
+    }
+
+    return &(((struct sockaddr_in6 *)sa)->sin6_addr);
 }
