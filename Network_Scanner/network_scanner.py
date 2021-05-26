@@ -26,7 +26,7 @@ def get_args():
         print("[-] No target IP(s) specified.\n    Enter target IP below.\n    Use --help for more info.")
         target = input("target > ")
 
-    print("------------------------------------------")
+        print("------------------------------------------")
     return target
 
 def scan(ip):

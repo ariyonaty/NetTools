@@ -53,7 +53,7 @@ def restore(dest_ip, src_ip):
     packet = ARP(op=2, pdst=dest_ip, hwdst=dest_mac, psrc=src_ip, hwsrc=src_mac)
     send(packet, count=4, verbose=False)
 
-if __name__ == "__main__":
+def main():
     sent_packets = 0
     target_ip = '10.0.2.4'
     gateway_ip = '10.0.2.1'
@@ -71,3 +71,7 @@ if __name__ == "__main__":
             restore(target_ip, gateway_ip)
             restore(gateway_ip, target_ip)
             break
+
+
+if __name__ == "__main__":
+    main()
