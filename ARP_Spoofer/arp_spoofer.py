@@ -55,8 +55,8 @@ def restore(dest_ip, src_ip):
 
 def main():
     sent_packets = 0
-    target_ip = '10.0.2.4'
-    gateway_ip = '10.0.2.1'
+    target_ip = '192.168.217.135'
+    gateway_ip = '192.168.217.2'
 
     menu()
     while True:
