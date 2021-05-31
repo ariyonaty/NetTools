@@ -18,9 +18,9 @@ def process_sniffed_packet(packet: scapy.packet.Packet):
             keywords = ['user', 'pass', 'username', 'password', 'login']
             for keyword in keywords:
                 if keyword.encode() in load:
-                    print("  [*] Possible cred: {load}")
+                    print(f"  [*] Possible cred: {load}")
                     break
 
 
 if __name__ == "__main__":
-    sniff('eth0')
+    sniff('ens33')
