@@ -12,3 +12,7 @@ Prerequistites :
 IPtables : 
 - iptables -I FORWARD -j NFQUEUE --queue-num 0
 - iptables flush 
+- To test locally:
+    - iptables -I OUTPUT -j NFQUEUE --queue-num 0
+    - iptables -I INPUT -j NFQUEUE --queue-num 0
+
