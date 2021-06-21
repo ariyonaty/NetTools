@@ -55,8 +55,12 @@ def restore(dest_ip, src_ip):
 
 def main():
     sent_packets = 0
-    target_ip = '192.168.217.135'
-    gateway_ip = '192.168.217.2'
+    target_ip = ''
+    gateway_ip = ''
+
+    if target_ip == '' or gateway_ip == '':
+        print("[-] Specify target and gateway IP.")
+        return
 
     menu()
     while True:
